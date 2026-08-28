@@ -1,0 +1,4 @@
+services:
+  s3gw:
+    ports:
+      - 8080:8080

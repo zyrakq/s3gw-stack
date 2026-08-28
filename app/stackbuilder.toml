@@ -1,0 +1,19 @@
+[paths]
+environments_path = "./environments"
+extensions_dirs = ["extensions"]
+
+[build]
+extensions = ["bucket-management", "step-ca-trust"]
+
+[build.environments]
+available = ["forwarding", "letsencrypt", "step-ca"]
+
+[build.environments.forwarding]
+extensions = ["bucket-management"]
+
+[build.environments.letsencrypt]
+extensions = ["bucket-management"]
+
+[build.environments.step-ca]
+skip_base_generation = true
+extensions = ["bucket-management", "step-ca-trust"]

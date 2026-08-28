@@ -1,0 +1,53 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-10m}
+    max-file: ${LOG_MAX_FILE:-3}
+    compress: ${LOG_COMPRESS:-true}
+services:
+  s3gw:
+    container_name: s3gw
+    image: ${IMAGE:-cloud37io/s3-encryption-gateway:0.11.10}
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      BACKEND_ACCESS_KEY: ${BACKEND_ACCESS_KEY}
+      BACKEND_SECRET_KEY: ${BACKEND_SECRET_KEY}
+      BACKEND_ENDPOINT: ${BACKEND_ENDPOINT}
+      BACKEND_REGION: ${BACKEND_REGION}
+      BACKEND_USE_PATH_STYLE: ${BACKEND_USE_PATH_STYLE:-true}
+      BACKEND_USE_SSL: ${BACKEND_USE_SSL:-true}
+      ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+      GW_CRED_0_ACCESS_KEY: ${GW_CRED_0_ACCESS_KEY}
+      GW_CRED_0_SECRET_KEY: ${GW_CRED_0_SECRET_KEY}
+      KEY_MANAGER_ENABLED: ${KEY_MANAGER_ENABLED:-true}
+      KEY_MANAGER_PROVIDER: ${KEY_MANAGER_PROVIDER:-self_contained}
+      SELF_CONTAINED_TYPE: ${SELF_CONTAINED_TYPE:-aes}
+      SELF_CONTAINED_AES_KEYS: ${SELF_CONTAINED_AES_KEYS}
+      AUTH_ALLOW_LEGACY_SIGNATURE_V2: ${AUTH_ALLOW_LEGACY_SIGNATURE_V2:-false}
+      VIRTUAL_PORT: ${VIRTUAL_PORT}
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      GW_CRED_0_PERMISSIONS: ${GW_CRED_0_PERMISSIONS}
+      GW_CRED_0_BUCKET_PERMISSIONS: ${GW_CRED_0_BUCKET_PERMISSIONS}
+      # GW_CRED_0_BUCKETS: ${GW_CRED_0_BUCKETS}
+      ALLOW_BUCKET_CREATION: ${ALLOW_BUCKET_CREATION:-true}
+    configs:
+      - source: vhost
+        target: ${VHOST_PATH:-/vhost.d/${VIRTUAL_HOST}}
+    volumes:
+      - letsencrypt-vhost:/vhost.d
+    networks:
+      - letsencrypt-network
+volumes:
+  letsencrypt-vhost:
+    external: true
+configs:
+  vhost:
+    content: |
+      client_max_body_size 0;
+      chunked_transfer_encoding on;
+networks:
+  letsencrypt-network:
+    external: true
