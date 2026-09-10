@@ -7,7 +7,7 @@ x-logging: &default-logging
 services:
   s3gw:
     container_name: s3gw
-    image: ${IMAGE:-cloud37io/s3-encryption-gateway:0.11.10}
+    image: ${IMAGE:-cloud37io/s3-encryption-gateway:0.12.3}
     restart: unless-stopped
     logging: *default-logging
     environment:

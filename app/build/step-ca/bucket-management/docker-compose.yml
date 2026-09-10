@@ -7,7 +7,7 @@ x-logging: &default-logging
 services:
   s3gw:
     container_name: s3gw
-    image: ${IMAGE:-cloud37io/s3-encryption-gateway:0.11.10}
+    image: ${IMAGE:-cloud37io/s3-encryption-gateway:0.12.3}
     restart: unless-stopped
     logging: *default-logging
     environment:
@@ -32,7 +32,7 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       GW_CRED_0_PERMISSIONS: ${GW_CRED_0_PERMISSIONS}
       GW_CRED_0_BUCKET_PERMISSIONS: ${GW_CRED_0_BUCKET_PERMISSIONS}
-      # GW_CRED_0_BUCKETS: ${GW_CRED_0_BUCKETS}
+      GW_CRED_0_BUCKETS: ${GW_CRED_0_BUCKETS}
       ALLOW_BUCKET_CREATION: ${ALLOW_BUCKET_CREATION:-true}
     configs:
       - source: vhost
